@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.kkyoungs.lector"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.kkyoungs.lector"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

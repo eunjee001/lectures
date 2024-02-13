@@ -178,3 +178,43 @@ val isHigh = true
 println("$a ${name.length} $isHigh")
 
 //출력 : 10 2 true
+```
+
+# 코틀린 중급
+
+## 1. 람다 함수
+1. 익명 함수  
+```kotlin   
+val a = fun(){ println("hello")}
+```
+2. 변수 처럼 사용되서, 함수의 argument, return
+```kotlin   
+val b : (Int) -> Int= { it * 10 }
+println(b(10))
+
+// 출력 : 100
+```
+
+3. 한번 사용 되고, 재사용 되지 않는 함수
+- SAM : Single Abstract Method(단일 추상 메소드)  
+```kotlin  
+view.setOnClickListener { println("안녕") } 
+```  
+
+## 2. 확장 함수(Extension function)  
+기존에 정의 되어 있는 클래스에 함수를 추가하는 기능
+```kotlin
+fun main() {
+    val test = Test()
+    Test().hello()
+    test.hi()
+    
+}
+
+fun Test.hi() = println("하이")
+
+class Test(){
+    fun hello() = println("안녕")
+    fun bye() = println("잘가")
+}  
+```  

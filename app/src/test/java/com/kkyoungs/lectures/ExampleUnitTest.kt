@@ -1,4 +1,4 @@
-package com.kkyoungs.lector
+package com.kkyoungs.lectures
 
 import org.junit.Test
 
