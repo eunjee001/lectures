@@ -217,4 +217,239 @@ class Test(){
     fun hello() = println("안녕")
     fun bye() = println("잘가")
 }  
+```    
+
+## 3. Scope Function (범위 지정 함수)
+- 코틀린 표준 라이브러리에서 제공하는 확장함수
+- 목적 : 간결, 명로, 유지보수 용이성
+- 객체의 컨텍스트 내에서, 실행 가능한 코드 블럭을 만드는 함수
+- 수신객체 : 확장 함수가 호출되는 대상이 되는 값
+- 수신객체지정 람다 : 수신객체 명시하지 않고, 람다 본문 안에서 해당 객체의 메서드를 호출 할 수 있게 하는 것
+
+<let, run, apply, also, with>
+1. let : Null 체크 해야할 때, 지역변수를 명시적으로 표현해야 할 때
+수신객체.let {it->... 마지막줄에서 return !}
+
+```kotlin
+fun main() {
+    val a = 3
+    a. let{
+
+    }
+    val user = User("굠잉", 10, true)
+
+    // 수신객체.let
+    val age = user.let{
+        user.age
+    }
+    println(age)
+}
+
+class User(
+    val name : String,
+    val age : Int,
+    val gender: Boolean
+)
+
+// 출력 : 10
+
 ```  
+
+2. run : 객체 초기화 할 때 사용 : 객체를 초기화 하고 리턴 값이 있을 때
+수신객체.run{this->.. 마지막 줄 return}
+```kotlin
+    val kid = User("로또", 4,false)
+    val kidAge = kid.run {
+        age
+    }
+    println(kidAge)
+
+// 출력 : 4
+
+```
+
+3. apply : 객체 초기화
+수신객체.apply{.. return 값이 수신객체(자기자신)}
+```kotlin
+fun main(){
+ val female = User("꼬미", 1 , true, false)
+    val femaleValue = female.apply {
+        hasGlasses = false
+    }
+
+    println(femaleValue.hasGlasses)
+}
+
+class User(
+    val name : String,
+    val age : Int,
+    val gender: Boolean,
+    var hasGlasses : Boolean = true
+)
+```
+4. also : 수신 객체를 명시적으로 사용하고 싶을 때, 로그를 남길 때
+수신객체.alse{it->.. return 값이 수신객체(자기자신)
+```kotlin
+val male = User("겸" , 25, false, true)
+    val maleValue = male.also{
+        user -> user.name
+        user.hasGlasses = false
+    }
+    println(maleValue.hasGlasses)
+```
+👉 also 와 apply 차이점
+also는 로그남기는 용으로 사용하면 좋고, apply는 초기화 할 때 사용하면 좋다.
+
+5. with : 객체 초기화, 람다 리턴 값이 필요 없을 때
+with(수신객체){마지막줄 return}
+```kotlin
+  val result = with(male){
+        hasGlasses = false
+        true
+    }
+    println(result)
+```
+
+## 4. 초기화 지연 (lateinit, lazy)
+- 정의 : 변수를 선언할 때, 값을 지정하지 않고, 나중에 지정할 수 있는 방법
+- 목적 : 메모리를 효율적으로 사용하기 위해서, null safe 한 value를 사용하기 위해서
+- lateinit, var
+    - 변수 타입을 지정해줘야함
+    - 선언 후 나중에 초기화해도 됨
+    - primitive 타입은 사용할 수 없음(예를들어 Int --> Integer)
+- lazy, val
+    - 선언과 동시에 초기화
+    - 호출 시점에 초기화 이뤄짐
+
+```kotlin
+// 타입 지정 꼭 필수
+  lateinit var text : String
+  
+  // 호출 하는 시점에서 초기화
+  val test : Int by lazy {
+      println("초기화중,,")
+      100
+  }
+  /**
+   * lateinit var age : Int -> Integer
+   * Int형은 선언 못함 ==> Integer
+   */
+  fun main(){
+      println("메인 함수 실행")
+      println("초기화 한 값 $test")
+      println("두번째 호출 $test")
+  
+      text = "name"
+  
+      println(text)
+  }
+
+    /*
+    [출력] 
+    
+    메인 함수 실행
+    초기화중,,
+    초기화 한 값 100
+    두번째 호출 100
+    name
+     */
+```
+
+
+## data, sealed class
+- Data class : 데이터를 담기 위한 클래스
+  - toStirng(), hasCode(), equals(), copy() 메서드 자동 생성(override 하면, 직접 구현한 코드 사용)
+  - 1개 이상의 프로퍼티(접근자(getter/setter)를 사용해 접근하는 것)가 있어야 함
+  - 데이터 클래스는 abstract, open, sealed, inner를 붙일 수 없음
+  - 상속 불가능
+```kotlin
+  fun main(){
+      val person = Person("수지" ,25)
+      val dog = Dog("로또", 4)
+  
+      println(person.toString())
+      println(dog.toString())
+      // name은 그대로 age만 변경
+      println(dog.copy(age =3))
+  }
+  class Person (val name : String, val age :Int)
+  
+  data class Dog(val name:String, val age:Int)
+
+  /* 출력
+  com.kkyoungs.lectures.chapter2.Person@5e481248
+  Dog(name=로또, age=4)
+  Dog(name=로또, age=3)
+   */
+```
+
+- Sealed class : 추상 클래스로 상속 받은 자식 클래스의 종류 제한
+  - 컴파일러가 sealed 클래스의 자식 클래스가 어떤 것 인지 암
+  - when과 함께 쓰일 때 장점
+  - else 쓰지 않아도 됨
+
+  ```kotlin
+  fun main(){
+    val cat : Cat = BlueCat()
+    when(cat){
+      is BlueCat -> "blue"
+      is RedCat -> "RED"
+      is GreenCat -> "Green"
+    }
+  }
+  
+  sealed class Cat
+  class BlueCat : Cat()
+  class RedCat : Cat()
+  class GreenCat : Cat()
+  ```
+  
+## Object, Companion object
+- object : 클래스를 정의함과 동시에 객체 생성
+  - 싱글톤을 쉽게 만들 수 있는 키워드
+  - 생성자 사용 불가
+  - 프로퍼티, 메서드, 초기화 블록 사용가능
+  - 다른 클래스나, 인터페이스를 상속받을 수 있음
+  - 에러 코드 정의할 때 많이 사용
+```kotlin
+fun main(){
+    Counter
+    println(Counter.count)
+    Counter.countUp()
+    Counter.countUp()
+    println(Counter.count)
+
+}
+
+object Counter {
+    init {
+        println("카운터 초기화")
+    }
+    var count = 0
+    fun countUp() {
+        count ++
+    }
+}
+
+/**
+ * 출력
+ * 카운터 초기화
+ * 0
+ * 2
+ */
+```
+- Companion object 동반 객체
+  - java의 static 과 동일한 역할
+  - 클래스 내에 하나만 생성 가능
+
+```kotlin
+  class Book{
+      companion object{
+          const val NAME = "name"
+      }
+  }
+
+    fun main(){
+      Book.NAME
+    }
+```
