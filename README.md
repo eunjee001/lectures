@@ -227,7 +227,7 @@ class Test(){
 - 수신객체지정 람다 : 수신객체 명시하지 않고, 람다 본문 안에서 해당 객체의 메서드를 호출 할 수 있게 하는 것
 
 <let, run, apply, also, with>
-1. let : Null 체크 해야할 때, 지역변수를 명시적으로 표현해야 할 때
+1. let : Null 체크 해야할 때, 지역변수를 명시적으로 표현해야 할 때  
 수신객체.let {it->... 마지막줄에서 return !}
 
 ```kotlin
@@ -255,7 +255,7 @@ class User(
 
 ```  
 
-2. run : 객체 초기화 할 때 사용 : 객체를 초기화 하고 리턴 값이 있을 때
+2. run : 객체 초기화 할 때 사용 : 객체를 초기화 하고 리턴 값이 있을 때  
 수신객체.run{this->.. 마지막 줄 return}
 ```kotlin
     val kid = User("로또", 4,false)
@@ -268,7 +268,7 @@ class User(
 
 ```
 
-3. apply : 객체 초기화
+3. apply : 객체 초기화  
 수신객체.apply{.. return 값이 수신객체(자기자신)}
 ```kotlin
 fun main(){
@@ -287,7 +287,7 @@ class User(
     var hasGlasses : Boolean = true
 )
 ```
-4. also : 수신 객체를 명시적으로 사용하고 싶을 때, 로그를 남길 때
+4. also : 수신 객체를 명시적으로 사용하고 싶을 때, 로그를 남길 때  
 수신객체.alse{it->.. return 값이 수신객체(자기자신)
 ```kotlin
 val male = User("겸" , 25, false, true)
@@ -297,10 +297,10 @@ val male = User("겸" , 25, false, true)
     }
     println(maleValue.hasGlasses)
 ```
-👉 also 와 apply 차이점
+👉 also 와 apply 차이점  
 also는 로그남기는 용으로 사용하면 좋고, apply는 초기화 할 때 사용하면 좋다.
 
-5. with : 객체 초기화, 람다 리턴 값이 필요 없을 때
+5. with : 객체 초기화, 람다 리턴 값이 필요 없을 때  
 with(수신객체){마지막줄 return}
 ```kotlin
   val result = with(male){
